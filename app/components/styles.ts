@@ -49,6 +49,6 @@ export const styles = StyleSheet.create({
     },
 
     notLiked: {
-        color: 'black', 
+        color: 'darkgray', 
     },
 })

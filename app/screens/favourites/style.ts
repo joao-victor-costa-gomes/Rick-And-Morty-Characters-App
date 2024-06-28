@@ -104,14 +104,6 @@ export const styles = StyleSheet.create({
         marginRight: 13,
     },
 
-    liked: {
-        color: 'red', 
-    },
-
-    notLiked: {
-        color: 'black', 
-    },
-
     charactersFlatList: {
         backgroundColor: "#FFFFFF", 
         alignItems: 'center',

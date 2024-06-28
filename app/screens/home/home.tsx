@@ -2,12 +2,25 @@ import React, { useState, useEffect } from "react";
 import { View, Image, TextInput, FlatList, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import logo_black from "../../assets/images/logo_black.png" 
-import main_logo from "../../assets/images/main_logo.png" 
+import logo_black from "../../../assets/images/logo_black.png/" 
+import main_logo from "../../../assets/images/main_logo.png" 
 
 import { styles } from "./styles"
 import { Card } from "../../components/characterCard"
 import { getCharacters } from "../../services/api"
+import { useNavigation } from "@react-navigation/native";
+import { CharacterDetails } from "../details/details";
+
+interface Character {
+    id: number, 
+    name: string, 
+    gender: string, 
+    status: string,
+    specie: string, 
+    origin: string, 
+    type: string, 
+    location: string
+}
 
 export const Home = () => {
              
@@ -42,6 +55,12 @@ export const Home = () => {
         //}
     }
 
+    const navigation = useNavigation()
+
+    //const renderCharacter = ({item} : {item: Character}) => (
+        //<Card data={item} onPress={() => navigation.navigate("Details", {CharacterId: item.id})}/>
+    //)
+
     return (<View style={styles.container}>
 
         <View style={styles.containerBlackLogo}>
@@ -55,8 +74,9 @@ export const Home = () => {
         <View style={styles.boxInput}>
             <Icon name="magnify" color="#808080" size={25} weight="light"/>
             <TextInput style={styles.input} placeholder="Filter by name..."
-            value={search}
-            onChangeText={setSearch}/>
+            //value={search}
+            //onChangeText={setSearch}
+            />
             
         </View>
 
@@ -64,8 +84,8 @@ export const Home = () => {
                 contentContainerStyle={styles.charactersFlatList}
                 showsVerticalScrollIndicator={false}
 
-                data={characters.filter(character => character.name.toLowerCase().includes(search.toLowerCase()))}
-                //data = {characters}
+                //data={characters.filter(character => character.name.toLowerCase().includes(search.toLowerCase()))}
+                data = {characters}
 
                 keyExtractor={(item) => item.id.toString()}
 
