@@ -2,9 +2,6 @@ import React, { useState, useEffect } from "react";
 import { View, Image, TextInput, FlatList, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import logo_black from "../../../assets/images/logo_black.png" 
-import main_logo from "../../../assets/images/main_logo.png" 
-
 import { styles } from "./styles"
 import { CharacterCard } from "../../components/characterCard"
 import { api } from "../../services/api"
@@ -18,6 +15,7 @@ interface Character {
     type: string, 
     gender: string, 
     origin: string, 
+    image: string
 }
 
 export const Home = () => {
@@ -56,27 +54,44 @@ export const Home = () => {
 
     const searchCharacters = async (query: string) => {
         SetLoading(true)
+        setResultCharacters([])
+        try {
         const response = await api.get(`/character/?name=${query}`, {
         })
 
         if (response.data.results.length === 0){
             setNotFound(true)
+            SetLoading(false)
         } else {
             setResultCharacters(response.data.results)
+            setNotFound(false)
         }
         SetLoading(false)
+        } catch (error) {
+            setNotFound(true)
+            SetLoading(false)
+        }
     }
+
+    const navigation = useNavigation()
+
+    const renderCharacter = ({item} : {item: Character}) => (
+        <CharacterCard 
+            data={item} 
+            onPress={() => navigation.navigate("Details", {characterId: item.id})}
+        />
+    )
 
     const charactersData = search.length > 0 ? resultCharacters : charactersList
 
     return (<View style={styles.container}>
 
         <View style={styles.containerBlackLogo}>
-            <Image source={logo_black} style={styles.blackLogo}/>
+            <Image source={require("../../../assets/images/logo_black.png")} style={styles.blackLogo}/>
         </View>
 
         <View style={styles.containerMainLogo}>
-            <Image source={main_logo} style={styles.mainLogo}/>
+            <Image source={require("../../../assets/images/main_logo.png")} style={styles.mainLogo}/>
         </View>
 
         <View style={styles.boxInput}>
@@ -85,21 +100,20 @@ export const Home = () => {
             value={search}
             onChangeText={handleSearch}
             />
-
-        {notFound && ( <Text style={styles.notFound}> Nenhum personagem encontrado de nome "{search}" </Text> )}
             
         </View>
 
-        <FlatList
+        <View>
+            {notFound && ( <Text style={styles.notFound}> Nenhum personagem encontrado com o nome {"\n"} "{search}" </Text> )}
+        </View>
+
+        <FlatList overScrollMode='never'
                 contentContainerStyle={styles.charactersFlatList}
                 showsVerticalScrollIndicator={false}
 
                 data = {charactersData}
-                renderItem = {(item) => (
-                    <CharacterCard
-                    data={item.item}
-                    />
-                )}
+                renderItem = {renderCharacter}
+                keyExtractor={(item) => item.id.toString()}
                 onEndReached={() => loadCharacters()}
                 onEndReachedThreshold={0.5}
 

@@ -113,10 +113,12 @@ export const styles = StyleSheet.create({
     },
 
     notFound: {
-        color: "black",
-        fontSize: 20,
+        backgroundColor: "#FFFFFF",
+        color: "darkgray",
+        fontSize: 15,
         textAlign: "center",
         marginVertical: 15,
+        width: 330,
       },
 
 })

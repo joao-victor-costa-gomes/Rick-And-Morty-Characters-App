@@ -3,6 +3,7 @@ import { Home } from "../screens/home/home";
 import { Favourites } from "../screens/favourites/favourites";
 import Icon from 'react-native-vector-icons/Feather';
 import { View, StyleSheet } from "react-native";
+import { Details } from "../screens/details/details";
 
 const { Navigator, Screen } = createBottomTabNavigator()
 
@@ -12,7 +13,7 @@ export function TabRoutes() {
             <Navigator
                 screenOptions={{
                     tabBarStyle: {
-                        height: 84,
+                        height: 75,
    
                     },
                     headerShown: false,
@@ -31,6 +32,11 @@ export function TabRoutes() {
                     tabBarIcon: ({ color }) => (
                         <Icon name='heart' color={color} size={47} weight="light" />
                     )
+                }}
+                />
+                <Screen name="Details" component={Details} 
+                options={{
+                    tabBarButton: () => null,
                 }}
                 />
             </Navigator>
