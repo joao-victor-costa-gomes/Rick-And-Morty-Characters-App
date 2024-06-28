@@ -110,6 +110,13 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         width: 350,
         gap: 15,
-    }
+    },
+
+    notFound: {
+        color: "black",
+        fontSize: 20,
+        textAlign: "center",
+        marginVertical: 15,
+      },
 
 })

@@ -2,64 +2,72 @@ import React, { useState, useEffect } from "react";
 import { View, Image, TextInput, FlatList, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import logo_black from "../../../assets/images/logo_black.png/" 
+import logo_black from "../../../assets/images/logo_black.png" 
 import main_logo from "../../../assets/images/main_logo.png" 
 
 import { styles } from "./styles"
-import { Card } from "../../components/characterCard"
-import { getCharacters } from "../../services/api"
+import { CharacterCard } from "../../components/characterCard"
+import { api } from "../../services/api"
 import { useNavigation } from "@react-navigation/native";
-import { CharacterDetails } from "../details/details";
 
 interface Character {
     id: number, 
     name: string, 
-    gender: string, 
     status: string,
-    specie: string, 
-    origin: string, 
+    species: string, 
     type: string, 
-    location: string
+    gender: string, 
+    origin: string, 
 }
 
 export const Home = () => {
-             
-    const [characters, setCharacters] = useState([])
-    const [page, SetPage] = useState(1)     
-    const [loading, SetLoading] = useState(false) 
-    const [search, setSearch] = useState("")  
 
-    const fetchCharacters = async () => {
+    const [charactersList, setCharactersList] = useState<Character[]>([])
+    const [page, SetPage] = useState(1) 
+    const [loading, SetLoading] = useState(false)
+    const [search, setSearch] = useState("") 
+    const [notFound, setNotFound] = useState(false) 
+    const [resultCharacters, setResultCharacters] = useState<Character[]>([])
+
+    const loadCharacters = async () =>  {
         SetLoading(true)
-            try {
-                const response = await getCharacters(page);
-                setCharacters([...characters, ...response]);
-                SetPage(page + 1)
-            } catch (error) {
-                console.error(error);
+        const response = await api.get("/character", {
+            params: {
+                page, 
             }
+        })
+        setCharactersList([...charactersList ,...response.data.results])
+        SetPage(page + 1)
         SetLoading(false)
-        };
-   
-    useEffect(() => {
-       fetchCharacters()
-    }, []);
-
-    const searchCharacter = async (name: string) => {
-        //SetLoading(true)
-        //const data = await getCharacters(`${page}&name=${name}`);
-        //if(){
-
-        //}else {
-
-        //}
     }
 
-    const navigation = useNavigation()
+    useEffect(() => {
+        loadCharacters()
+     }, []);
 
-    //const renderCharacter = ({item} : {item: Character}) => (
-        //<Card data={item} onPress={() => navigation.navigate("Details", {CharacterId: item.id})}/>
-    //)
+    const handleSearch =  (name: string) => {
+        setSearch(name)
+        if (search.length > 0){
+            searchCharacters(name)
+        } else {
+            setResultCharacters([])
+        }
+    }
+
+    const searchCharacters = async (query: string) => {
+        SetLoading(true)
+        const response = await api.get(`/character/?name=${query}`, {
+        })
+
+        if (response.data.results.length === 0){
+            setNotFound(true)
+        } else {
+            setResultCharacters(response.data.results)
+        }
+        SetLoading(false)
+    }
+
+    const charactersData = search.length > 0 ? resultCharacters : charactersList
 
     return (<View style={styles.container}>
 
@@ -74,9 +82,11 @@ export const Home = () => {
         <View style={styles.boxInput}>
             <Icon name="magnify" color="#808080" size={25} weight="light"/>
             <TextInput style={styles.input} placeholder="Filter by name..."
-            //value={search}
-            //onChangeText={setSearch}
+            value={search}
+            onChangeText={handleSearch}
             />
+
+        {notFound && ( <Text style={styles.notFound}> Nenhum personagem encontrado de nome "{search}" </Text> )}
             
         </View>
 
@@ -84,20 +94,15 @@ export const Home = () => {
                 contentContainerStyle={styles.charactersFlatList}
                 showsVerticalScrollIndicator={false}
 
-                //data={characters.filter(character => character.name.toLowerCase().includes(search.toLowerCase()))}
-                data = {characters}
-
-                keyExtractor={(item) => item.id.toString()}
-
-                renderItem={({ item }) => (
-                    <Card
-                        name={item.name}
-                        race={item.species}
-                        image={item.image}
+                data = {charactersData}
+                renderItem = {(item) => (
+                    <CharacterCard
+                    data={item.item}
                     />
                 )}
-                onEndReached={() => fetchCharacters()}
+                onEndReached={() => loadCharacters()}
                 onEndReachedThreshold={0.5}
+
         />
         {loading && <ActivityIndicator size={50} color='green'/> }
 

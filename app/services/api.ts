@@ -16,3 +16,7 @@ export const getCharacters = async (pageNumber = 1, characterName = "") => {
         throw error;
     }
 };
+
+export const api = axios.create({
+    baseURL: 'https://rickandmortyapi.com/api'
+})
