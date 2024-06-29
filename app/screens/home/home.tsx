@@ -104,7 +104,7 @@ export const Home = () => {
         </View>
 
         <View>
-            {notFound && ( <Text style={styles.notFound}> Nenhum personagem encontrado com o nome {"\n"} "{search}" </Text> )}
+            {notFound && ( <Text style={styles.notFound}> No characters with the name "{search}" were found</Text> )}
         </View>
 
         <FlatList overScrollMode='never'

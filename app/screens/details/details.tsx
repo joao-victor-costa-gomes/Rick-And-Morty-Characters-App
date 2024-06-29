@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { api } from '../../services/api';
+import { useNavigation } from "@react-navigation/native";
 
 interface CharacterDetails {
     id: number, 
@@ -30,9 +31,9 @@ export const Details = () => {
         const getCharacterDetails = async () => {
             try {
                 setLoading(true);
+                setCharacterDetails(null)
                 const response = await api.get(`/character/${characterId}`);
                 setCharacterDetails(response.data);
-                //console.log(JSON.stringify(response.data, null, 2));
                 setLoading(false);
             } catch (error) {
                 console.log(error);
@@ -46,63 +47,65 @@ export const Details = () => {
         return <ActivityIndicator size="large" color="green" style={styles.loader} />;
     }
 
+    const navigation = useNavigation()
+
     return (
         <View style={styles.container}>
             <View style={styles.containerBlackLogo}>
                 <Image source={require("../../../assets/images/logo_black.png")} style={styles.blackLogo} />
             </View>
 
-            <TouchableOpacity style={styles.goBack}>
+            <TouchableOpacity style={styles.goBack} onPress={() => navigation.goBack()}>
                 <Icon name="arrow-left" size={24} color="#000" />
                 <Text style={styles.goBackText}>GO BACK</Text>
             </TouchableOpacity>
-            
-            
-            {characterDetails && (
-            <>
-            <Image source={{ uri: characterDetails.image }} style={styles.imageCircle} />
 
-            <Text style={styles.name}>{characterDetails.name}</Text>
 
-            <Text style={styles.informations}>Informations</Text>
+                {characterDetails && (
+                    <>
+                    <Image source={{ uri: characterDetails.image }} style={styles.imageCircle} />
 
-            <ScrollView style={styles.infoContainer} showsVerticalScrollIndicator={false} overScrollMode='never'>
+                    <Text style={styles.name}>{characterDetails.name}</Text>
 
-                <Text style={styles.infoLabel}>Gender</Text>
-                <Text style={styles.infoValue}>{characterDetails.gender}</Text>
+                    <Text style={styles.informations}>Informations</Text>
 
-                <View style={styles.horizontalLine}></View>
+                    <ScrollView style={styles.infoContainer} showsVerticalScrollIndicator={false} overScrollMode='never'>
 
-                <Text style={styles.infoLabel}>Status</Text>
-                <Text style={styles.infoValue}>{characterDetails.status}</Text>
+                        <Text style={styles.infoLabel}>Gender</Text>
+                        <Text style={styles.infoValue}>{characterDetails.gender}</Text>
 
-                <View style={styles.horizontalLine}></View>
+                        <View style={styles.horizontalLine}></View>
 
-                <Text style={styles.infoLabel}>Specie</Text>
-                <Text style={styles.infoValue}>{characterDetails.species}</Text>
+                        <Text style={styles.infoLabel}>Status</Text>
+                        <Text style={styles.infoValue}>{characterDetails.status}</Text>
 
-                <View style={styles.horizontalLine}></View>
+                        <View style={styles.horizontalLine}></View>
 
-                <Text style={styles.infoLabel}>Origin</Text>
-                <Text style={styles.infoValue}>{characterDetails.origin.name}</Text>
+                        <Text style={styles.infoLabel}>Specie</Text>
+                        <Text style={styles.infoValue}>{characterDetails.species}</Text>
 
-                <View style={styles.horizontalLine}></View>
+                        <View style={styles.horizontalLine}></View>
 
-                
-                <Text style={styles.infoLabel}>Type</Text>
-                <Text style={styles.infoValue}>{characterDetails.type ? characterDetails.type : 'Unknown'}</Text>
+                        <Text style={styles.infoLabel}>Origin</Text>
+                        <Text style={styles.infoValue}>{characterDetails.origin.name}</Text>
 
-                <View style={styles.horizontalLine}></View>
+                        <View style={styles.horizontalLine}></View>
 
-                <Text style={styles.infoLabel}>Location</Text>
-                <Text style={styles.infoValue}>{characterDetails.location.name}</Text>
+                        
+                        <Text style={styles.infoLabel}>Type</Text>
+                        <Text style={styles.infoValue}>{characterDetails.type ? characterDetails.type : 'unknown'}</Text>
 
-                <View style={styles.horizontalEndLine}></View>
+                        <View style={styles.horizontalLine}></View>
 
-            </ScrollView>
-            </>
-            )}
-            
+                        <Text style={styles.infoLabel}>Location</Text>
+                        <Text style={styles.infoValue}>{characterDetails.location.name}</Text>
+
+                        <View style={styles.horizontalEndLine}></View>
+
+                    </ScrollView>
+                    </>
+                )}
+                    
         </View>
     );
 };

@@ -17,14 +17,7 @@ export const Favourites = () => {
             <Image source={require("../../../assets/images/logo_black.png")} style={styles.blackLogo}/>
         </View>
 
-        <View style={styles.boxInput}>
-            <Icon name="magnify" color="#808080" size={25} weight="light"/>
-            <TextInput style={styles.input} placeholder="Filter by name..."
-            //value={search}
-            //onChangeText={setSearch}
-            />
-            
-        </View>
+        
 
     </View>)
 }
