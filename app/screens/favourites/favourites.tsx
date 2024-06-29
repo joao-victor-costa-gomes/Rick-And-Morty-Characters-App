@@ -7,6 +7,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from "./style";
 import { CharacterCard } from "../../components/characterCard";
 import { api } from "../../services/api";
+import { useNavigation } from "@react-navigation/native";
+
 
 interface Character {
     id: number, 
@@ -54,8 +56,11 @@ export const Favourites = () => {
         <CharacterCard
             data={item}
             liked={true}
+            onPress={() => navigation.navigate("Details", {characterId: item.id})}
         />
     );
+
+    const navigation = useNavigation()
 
     return (
         <View style={styles.container}>
