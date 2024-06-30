@@ -10,7 +10,6 @@ A simple application that loads information from the [Rick and Morty API](https:
     <img src="./images/liking.jpg" alt="liking" width="150"/>
     <img src="./images/favourites_screen.jpg" alt="favourites" width="150"/>
     <img src="./images/character_screen.jpg" alt="character" width="150"/>
-    <img src="./images/not_found_screen.jpg" alt="not_found" width="150"/>
 </div>
 
 ## Implemented features 
